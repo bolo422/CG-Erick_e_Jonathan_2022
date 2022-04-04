@@ -1,0 +1,8 @@
+Object 0: background 1
+Object 1: background 2
+
+Object 2: middleground 1
+Object 3: middleground 2
+
+Object 4: ground 1
+Object 5: ground 2

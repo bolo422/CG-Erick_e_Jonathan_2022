@@ -1,0 +1,2 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(513,5): warning MSB8028: O diretório intermediário (Debug\) contém arquivos compartilhados de outro projeto (HelloOrtho.vcxproj). Isso pode levar a um comportamento incorreto de limpeza e recompilação.
+  Exercicio7.vcxproj -> C:\Users\crow1\Documents\GitHub\Entrega-GA-PG\GA\Debug\HelloTransforms.exe
