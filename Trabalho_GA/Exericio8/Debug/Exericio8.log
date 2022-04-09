@@ -1,19 +1,12 @@
-﻿  glad.c
-  GameManager.cpp
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(14,16): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(15,17): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(292,2): warning C4305: 'inicializando': truncamento de 'double' para 'GLfloat'
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(345,26): warning C4305: 'inicializando': truncamento de 'double' para 'float'
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(362,11): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(363,11): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(367,16): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(368,16): warning C4244: 'inicializando': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(369,10): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(370,10): warning C4244: '=': conversão de 'double' para 'float', possível perda de dados
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(372,26): warning C4305: 'inicializando': truncamento de 'double' para 'float'
-C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\GameManager.cpp(395,26): warning C4244: '-=': conversão de 'double' para 'float', possível perda de dados
-  Origem.cpp
-  Shader.cpp
-  Gerando Código...
+﻿  stb_image.cpp
+Model.obj : error LNK2005: "unsigned int __cdecl TextureFromFile(char const *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool)" (?TextureFromFile@@YAIPBDABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_N@Z) já definida no GameManager.obj
+Origem.obj : error LNK2005: "unsigned int __cdecl TextureFromFile(char const *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool)" (?TextureFromFile@@YAIPBDABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_N@Z) já definida no GameManager.obj
 LINK : warning LNK4098: defaultlib 'MSVCRT' conflita com uso de outras bibliotecas; use /NODEFAULTLIB:library
-  Exericio8.vcxproj -> C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Debug\Hello3D.exe
+GameManager.obj : error LNK2019: símbolo externo não resolvido, "public: __thiscall Assimp::Importer::Importer(void)" (??0Importer@Assimp@@QAE@XZ), referenciado na função "private: void __thiscall Model::loadModel(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?loadModel@Model@@AAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+GameManager.obj : error LNK2019: símbolo externo não resolvido, "public: __thiscall Assimp::Importer::~Importer(void)" (??1Importer@Assimp@@QAE@XZ), referenciado na função "private: void __thiscall Model::loadModel(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?loadModel@Model@@AAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+GameManager.obj : error LNK2019: símbolo externo não resolvido, "public: struct aiScene const * __thiscall Assimp::Importer::ReadFile(char const *,unsigned int)" (?ReadFile@Importer@Assimp@@QAEPBUaiScene@@PBDI@Z), referenciado na função "public: struct aiScene const * __thiscall Assimp::Importer::ReadFile(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,unsigned int)" (?ReadFile@Importer@Assimp@@QAEPBUaiScene@@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@I@Z)
+GameManager.obj : error LNK2019: símbolo externo não resolvido, "public: char const * __thiscall Assimp::Importer::GetErrorString(void)const " (?GetErrorString@Importer@Assimp@@QBEPBDXZ), referenciado na função "private: void __thiscall Model::loadModel(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &)" (?loadModel@Model@@AAEXABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z)
+GameManager.obj : error LNK2019: símbolo externo não resolvido, _aiGetMaterialTextureCount, referenciado na função "public: unsigned int __thiscall aiMaterial::GetTextureCount(enum aiTextureType)const " (?GetTextureCount@aiMaterial@@QBEIW4aiTextureType@@@Z)
+GameManager.obj : error LNK2019: símbolo externo não resolvido, _aiGetMaterialTexture, referenciado na função "public: enum aiReturn __thiscall aiMaterial::GetTexture(enum aiTextureType,unsigned int,struct aiString *,enum aiTextureMapping *,unsigned int *,float *,enum aiTextureOp *,enum aiTextureMapMode *)const " (?GetTexture@aiMaterial@@QBE?AW4aiReturn@@W4aiTextureType@@IPAUaiString@@PAW4aiTextureMapping@@PAIPAMPAW4aiTextureOp@@PAW4aiTextureMapMode@@@Z)
+..\..\dependencies\assimp\lib\assimp-vc142-mt.lib : warning LNK4272: o tipo de máquina da biblioteca 'x64' está em conflito com o tipo de máquina de destino 'x86'
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Debug\Hello3D.exe : fatal error LNK1120: 6 externo não resolvidos

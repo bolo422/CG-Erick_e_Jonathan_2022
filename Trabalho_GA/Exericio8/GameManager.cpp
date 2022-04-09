@@ -1,3 +1,5 @@
+
+#pragma once
 #include "GameManager.h"
 
 int w = 0, a = 0, s = 0, d = 0;
@@ -18,7 +20,9 @@ void GameManager::Start()
 
 	// Inicialização da GLFW
 	glfwInit();
-
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	// Criação da janela GLFW
 	window = glfwCreateWindow(WIDTH, HEIGHT, "Ola Triangulo!", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
@@ -36,7 +40,8 @@ void GameManager::Start()
 		std::cout << "Failed to initialize GLAD" << std::endl;
 
 	}
-
+	// tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+	stbi_set_flip_vertically_on_load(false);
 	// Obtendo as informações de versão
 	//renderer = glGetString(GL_RENDERER); /* get renderer string */
 	//version = glGetString(GL_VERSION); /* version as a string */
@@ -50,13 +55,18 @@ void GameManager::Start()
 
 	// Compilando e buildando o programa de shader
 	shader = new Shader("../shaders/hello.vs", "../shaders/hello.fs");
+	// draw in wireframe
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	// load models
+	// -----------
+	Model1 = new Model("../Modelos/3D_Models/Pokemon/Pikachu.obj");
 
-	// Gerando um buffer simples, com a geometria de um triângulo
-	VAO = setupGeometry();
+	//// Gerando um buffer simples, com a geometria de um triângulo
+	//VAO = setupGeometry();
 
 
-	//glUseProgram(shader.ID);
-	shader->Use();
+	////glUseProgram(shader.ID);
+	//shader->Use();
 
 
 	//Inicialização dos parâmetros da câmera
@@ -74,7 +84,7 @@ void GameManager::Start()
 		glm::vec3(0.0f, 0.0f, 0.0f), //center = ponto a ser observado (objetivo)
 		cameraUp); //up
 	viewLoc = glGetUniformLocation(shader->ID, "view");
-	glUniformMatrix4fv(viewLoc, 1, FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(viewLoc, 1, NULL, glm::value_ptr(view));
 
 
 	//Poderia já colocar a posição que o view iniciaria
@@ -87,12 +97,12 @@ void GameManager::Start()
 	projection = glm::perspective(fov, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
 	//projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -3.0f, 3.0f);
 
-	glUniformMatrix4fv(projectionLoc, 1, FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(projectionLoc, 1, NULL, glm::value_ptr(projection));
 
 
 	//
 	model = glm::rotate(model, /*(GLfloat)glfwGetTime()*/glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	glUniformMatrix4fv(modelLoc, 1, FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(modelLoc, 1, NULL, glm::value_ptr(model));
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -112,8 +122,22 @@ void GameManager::Update()
 		glClearColor(1.0f, 1.0f, 1.0f, 1.0f); //cor de fundo
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glLineWidth(10);
-		glPointSize(15);
+		shader->use();
+
+		// render the loaded model
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+		model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+		shader->setMat4("model", model);
+		Model1->Draw(*shader);
+
+
+		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
+		// -------------------------------------------------------------------------------
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+		/*glLineWidth(10);
+		glPointSize(15);*/
 
 		float angle = (GLfloat)glfwGetTime();
 
@@ -170,12 +194,12 @@ void GameManager::Update()
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
 		projection = glm::perspective(fov, (GLfloat)WIDTH / (GLfloat)HEIGHT, 0.1f, 100.0f);
-		glUniformMatrix4fv(projectionLoc, 1, FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(projectionLoc, 1, NULL, glm::value_ptr(projection));
 
 
-		glUniformMatrix4fv(viewLoc, 1, FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(viewLoc, 1, NULL, glm::value_ptr(view));
 
-		glUniformMatrix4fv(modelLoc, 1, FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(modelLoc, 1, NULL, glm::value_ptr(model));
 
 		// Chamada de desenho - drawcall
 		// Poligono Preenchido - GL_TRIANGLES
@@ -192,7 +216,13 @@ void GameManager::Update()
 		// Troca os buffers da tela
 		glfwSwapBuffers(window);
 	}
+
+
+
+
+	
 }
+
 
 void GameManager::Finish()
 {
@@ -202,140 +232,140 @@ void GameManager::Finish()
 	glfwTerminate();
 }
 
-int GameManager::setupGeometry()
-{
-	// Aqui setamos as coordenadas x, y e z do triângulo e as armazenamos de forma
-	// sequencial, já visando mandar para o VBO (Vertex Buffer Objects)
-	// Cada atributo do vértice (coordenada, cores, coordenadas de textura, normal, etc)
-	// Pode ser arazenado em um VBO único ou em VBOs separados
-	GLfloat vertices[] = {
-
-		//Base da pirâmide: 2 triângulos
-		//x    y    z    r    g    b
-
-		// EXERCÍCIO 1 - TRANSFORMAR TRIÂNGULO EM CUBO E CRIAR CHÃO
-
-		//CUBO
-			-0.5, -0.5, -0.5,		0.6, 0.6, 0.9, //0 -> LADO 1
-			-0.5, -0.5,  0.5,		0.6, 0.6, 0.9,
-			0.5, -0.5, -0.5,		0.6, 0.6, 0.9,
-
-			-0.5, -0.5, 0.5,		0.6, 0.6, 0.9, //1 - LADO 1
-			0.5, -0.5,  0.5,		0.6, 0.6, 0.9,
-			0.5, -0.5, -0.5,		0.6, 0.6, 0.9,
-
-			/* ------------------------------------------------------------------------- */
-
-						-0.5, -0.5, 0.5,		0.5, 0.1, 0.6, //4 -> LADO 2
-						0.5, 0.5,  0.5,			0.5, 0.1, 0.6, //
-						0.5, -0.5, 0.5,			0.5, 0.1, 0.6,
-
-						-0.5, 0.5, 0.5,			0.5, 0.1, 0.6, // 8 -> LADO 2
-						0.5,  0.5,  0.5,		0.5, 0.1, 0.6, //
-						-0.5, -0.5, 0.5,		0.5, 0.1, 0.6,
-
-						/* ------------------------------------------------------------------------- */
-
-									-0.5, 0.5, -0.5,		0.4, 0.6, 0.1, //10 -> LADO 3
-									-0.5, 0.5,  0.5,		0.4, 0.6, 0.1, //
-									 0.5, 0.5, -0.5,		0.4, 0.6, 0.1,
-
-									-0.5, 0.5, 0.5,			0.4, 0.6, 0.1, //11 -> LADO 3
-									 0.5, 0.5,  0.5,		0.4, 0.6, 0.1,//
-									 0.5, 0.5, -0.5,		0.4, 0.6, 0.1,
-
-									 /* ------------------------------------------------------------------------- */
-
-												 -0.5, -0.5, -0.5,		0.7, 0.2, 0.1, //2 -> LADO 4
-												 -0.5,  0.5, -0.5,		0.7, 0.2, 0.1, //
-												 0.5, -0.5, -0.5,		0.7, 0.2, 0.1,
-
-												 0.5, -0.5, -0.5,		0.7, 0.2, 0.1, // 6 -> LADO 4
-												 0.5,  0.5,  -0.5,		0.7, 0.2, 0.1, //
-												 -0.5, 0.5, -0.5,		0.7, 0.2, 0.1,
-
-												 /* ------------------------------------------------------------------------- */
-
-															 0.5, -0.5, 0.5,			0.2, 0.6, 0.7, // 5 -> LADO 5
-															 0.5,  0.5,  -0.5,		0.2, 0.6, 0.7, //
-															 0.5, -0.5, -0.5,		0.2, 0.6, 0.7,
-
-															 0.5, -0.5, 0.5,			0.2, 0.6, 0.7, // 7 -> LADO 5
-															 0.5,  0.5,  0.5,		0.2, 0.6, 0.7, //
-															 0.5, 0.5, -0.5,			0.2, 0.6, 0.7,
-
-															 /* ------------------------------------------------------------------------- */
-
-																		 -0.5, -0.5, -0.5,		0.4, 0.1, 0.6, //3 -> LADO 6
-																		 -0.5,  0.5,  -0.5,		0.4, 0.1, 0.6, //
-																		 -0.5, -0.5, 0.5,		0.4, 0.1, 0.6,
-
-																		 -0.5, 0.5, 0.5,			0.4, 0.1, 0.6, // 9 -> LADO 6
-																		 -0.5,  -0.5,  0.5,		0.4, 0.1, 0.6, //
-																		 -0.5, 0.5, -0.5,		0.4, 0.1, 0.6,
-
-
-
-																		 //			CHÃO		
-																	 /* ------------------------------------------------------------------------- */
-
-																				 -1, -0.51, 1,		1.0, 0, 0.2, //
-																				 1,   -0.51, -1,		1.0, 0, 0.2, //
-																				 -1, -0.51, -1,		1.0, 0, 0.2,
-
-																				 1, -0.51, 1,		1.0, 0, 0.2, //
-																				 -1,  -0.51, 1,		1.0, 0, 0.2, //
-																				 1, -0.51, -1,		1.0, 0, 0.2,
-
-
-
-	};
-
-	GLuint VBO, VAO;
-
-	//Geração do identificador do VBO
-	glGenBuffers(1, &VBO);
-
-	//Faz a conexão (vincula) do buffer como um buffer de array
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	//Envia os dados do array de floats para o buffer da OpenGl
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//Geração do identificador do VAO (Vertex Array Object)
-	glGenVertexArrays(1, &VAO);
-
-	// Vincula (bind) o VAO primeiro, e em seguida  conecta e seta o(s) buffer(s) de vértices
-	// e os ponteiros para os atributos 
-	glBindVertexArray(VAO);
-
-	//Para cada atributo do vertice, criamos um "AttribPointer" (ponteiro para o atributo), indicando: 
-	// Localização no shader * (a localização dos atributos devem ser correspondentes no layout especificado no vertex shader)
-	// Numero de valores que o atributo tem (por ex, 3 coordenadas xyz) 
-	// Tipo do dado
-	// Se está normalizado (entre zero e um)
-	// Tamanho em bytes 
-	// Deslocamento a partir do byte zero 
-
-	//Atributo posição (x, y, z)
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
-	glEnableVertexAttribArray(0);
-
-	//Atributo cor (r, g, b)
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
-	glEnableVertexAttribArray(1);
-
-
-
-	// Observe que isso é permitido, a chamada para glVertexAttribPointer registrou o VBO como o objeto de buffer de vértice 
-	// atualmente vinculado - para que depois possamos desvincular com segurança
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// Desvincula o VAO (é uma boa prática desvincular qualquer buffer ou array para evitar bugs medonhos)
-	glBindVertexArray(0);
-
-	return VAO;
-}
+//int GameManager::setupGeometry()
+//{
+//	// Aqui setamos as coordenadas x, y e z do triângulo e as armazenamos de forma
+//	// sequencial, já visando mandar para o VBO (Vertex Buffer Objects)
+//	// Cada atributo do vértice (coordenada, cores, coordenadas de textura, normal, etc)
+//	// Pode ser arazenado em um VBO único ou em VBOs separados
+//	GLfloat vertices[] = {
+//
+//		//Base da pirâmide: 2 triângulos
+//		//x    y    z    r    g    b
+//
+//		// EXERCÍCIO 1 - TRANSFORMAR TRIÂNGULO EM CUBO E CRIAR CHÃO
+//
+//		//CUBO
+//			-0.5, -0.5, -0.5,		0.6, 0.6, 0.9, //0 -> LADO 1
+//			-0.5, -0.5,  0.5,		0.6, 0.6, 0.9,
+//			0.5, -0.5, -0.5,		0.6, 0.6, 0.9,
+//
+//			-0.5, -0.5, 0.5,		0.6, 0.6, 0.9, //1 - LADO 1
+//			0.5, -0.5,  0.5,		0.6, 0.6, 0.9,
+//			0.5, -0.5, -0.5,		0.6, 0.6, 0.9,
+//
+//			/* ------------------------------------------------------------------------- */
+//
+//						-0.5, -0.5, 0.5,		0.5, 0.1, 0.6, //4 -> LADO 2
+//						0.5, 0.5,  0.5,			0.5, 0.1, 0.6, //
+//						0.5, -0.5, 0.5,			0.5, 0.1, 0.6,
+//
+//						-0.5, 0.5, 0.5,			0.5, 0.1, 0.6, // 8 -> LADO 2
+//						0.5,  0.5,  0.5,		0.5, 0.1, 0.6, //
+//						-0.5, -0.5, 0.5,		0.5, 0.1, 0.6,
+//
+//						/* ------------------------------------------------------------------------- */
+//
+//									-0.5, 0.5, -0.5,		0.4, 0.6, 0.1, //10 -> LADO 3
+//									-0.5, 0.5,  0.5,		0.4, 0.6, 0.1, //
+//									 0.5, 0.5, -0.5,		0.4, 0.6, 0.1,
+//
+//									-0.5, 0.5, 0.5,			0.4, 0.6, 0.1, //11 -> LADO 3
+//									 0.5, 0.5,  0.5,		0.4, 0.6, 0.1,//
+//									 0.5, 0.5, -0.5,		0.4, 0.6, 0.1,
+//
+//									 /* ------------------------------------------------------------------------- */
+//
+//												 -0.5, -0.5, -0.5,		0.7, 0.2, 0.1, //2 -> LADO 4
+//												 -0.5,  0.5, -0.5,		0.7, 0.2, 0.1, //
+//												 0.5, -0.5, -0.5,		0.7, 0.2, 0.1,
+//
+//												 0.5, -0.5, -0.5,		0.7, 0.2, 0.1, // 6 -> LADO 4
+//												 0.5,  0.5,  -0.5,		0.7, 0.2, 0.1, //
+//												 -0.5, 0.5, -0.5,		0.7, 0.2, 0.1,
+//
+//												 /* ------------------------------------------------------------------------- */
+//
+//															 0.5, -0.5, 0.5,			0.2, 0.6, 0.7, // 5 -> LADO 5
+//															 0.5,  0.5,  -0.5,		0.2, 0.6, 0.7, //
+//															 0.5, -0.5, -0.5,		0.2, 0.6, 0.7,
+//
+//															 0.5, -0.5, 0.5,			0.2, 0.6, 0.7, // 7 -> LADO 5
+//															 0.5,  0.5,  0.5,		0.2, 0.6, 0.7, //
+//															 0.5, 0.5, -0.5,			0.2, 0.6, 0.7,
+//
+//															 /* ------------------------------------------------------------------------- */
+//
+//																		 -0.5, -0.5, -0.5,		0.4, 0.1, 0.6, //3 -> LADO 6
+//																		 -0.5,  0.5,  -0.5,		0.4, 0.1, 0.6, //
+//																		 -0.5, -0.5, 0.5,		0.4, 0.1, 0.6,
+//
+//																		 -0.5, 0.5, 0.5,			0.4, 0.1, 0.6, // 9 -> LADO 6
+//																		 -0.5,  -0.5,  0.5,		0.4, 0.1, 0.6, //
+//																		 -0.5, 0.5, -0.5,		0.4, 0.1, 0.6,
+//
+//
+//
+//																		 //			CHÃO		
+//																	 /* ------------------------------------------------------------------------- */
+//
+//																				 -1, -0.51, 1,		1.0, 0, 0.2, //
+//																				 1,   -0.51, -1,		1.0, 0, 0.2, //
+//																				 -1, -0.51, -1,		1.0, 0, 0.2,
+//
+//																				 1, -0.51, 1,		1.0, 0, 0.2, //
+//																				 -1,  -0.51, 1,		1.0, 0, 0.2, //
+//																				 1, -0.51, -1,		1.0, 0, 0.2,
+//
+//
+//
+//	};
+//
+//	GLuint VBO, VAO;
+//
+//	//Geração do identificador do VBO
+//	glGenBuffers(1, &VBO);
+//
+//	//Faz a conexão (vincula) do buffer como um buffer de array
+//	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+//
+//	//Envia os dados do array de floats para o buffer da OpenGl
+//	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+//
+//	//Geração do identificador do VAO (Vertex Array Object)
+//	glGenVertexArrays(1, &VAO);
+//
+//	// Vincula (bind) o VAO primeiro, e em seguida  conecta e seta o(s) buffer(s) de vértices
+//	// e os ponteiros para os atributos 
+//	glBindVertexArray(VAO);
+//
+//	//Para cada atributo do vertice, criamos um "AttribPointer" (ponteiro para o atributo), indicando: 
+//	// Localização no shader * (a localização dos atributos devem ser correspondentes no layout especificado no vertex shader)
+//	// Numero de valores que o atributo tem (por ex, 3 coordenadas xyz) 
+//	// Tipo do dado
+//	// Se está normalizado (entre zero e um)
+//	// Tamanho em bytes 
+//	// Deslocamento a partir do byte zero 
+//
+//	//Atributo posição (x, y, z)
+//	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
+//	glEnableVertexAttribArray(0);
+//
+//	//Atributo cor (r, g, b)
+//	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+//	glEnableVertexAttribArray(1);
+//
+//
+//
+//	// Observe que isso é permitido, a chamada para glVertexAttribPointer registrou o VBO como o objeto de buffer de vértice 
+//	// atualmente vinculado - para que depois possamos desvincular com segurança
+//	glBindBuffer(GL_ARRAY_BUFFER, 0);
+//
+//	// Desvincula o VAO (é uma boa prática desvincular qualquer buffer ou array para evitar bugs medonhos)
+//	glBindVertexArray(0);
+//
+//	return VAO;
+//}
 
 void GameManager::processInput(GLFWwindow* window)
 {
