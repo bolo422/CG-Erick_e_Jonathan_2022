@@ -1,0 +1,5 @@
+﻿  Checking Build System
+  CMake is re-running because C:/Users/Jonathan  M.B/Desktop/assimp/CMakeFiles/generate.stamp dependency file is missing.
+CUSTOMBUILD : CMake error : The source directory "C:/Users/Jonathan  M.B/Desktop/assimp" does not appear to contain CMakeLists.txt.
+  Specify --help for usage, or press the help button on the CMake GUI.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(241,5): error MSB8066: o build personalizado para 'C:\Users\Jonathan  M.B\Desktop\assimp\CMakeFiles\d7b50876da4dab543724b7853b7bffc6\generate.stamp.rule' foi encerrado com o código 1.

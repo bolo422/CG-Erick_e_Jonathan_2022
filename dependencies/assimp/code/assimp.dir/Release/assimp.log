@@ -1,0 +1,7 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\Jonathan  M.B\Desktop\assimp\ZERO_CHECK.vcxproj' does not exist.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets(1967,5): warning : The referenced project 'C:\Users\Jonathan  M.B\Desktop\assimp\contrib\zlib\zlibstatic.vcxproj' does not exist.
+  Building Custom Rule C:/Users/Jonathan  M.B/Desktop/assimp/code/CMakeLists.txt
+  CMake is re-running because C:/Users/Jonathan  M.B/Desktop/assimp/code/CMakeFiles/generate.stamp dependency file is missing.
+CUSTOMBUILD : CMake error : The source directory "C:/Users/Jonathan  M.B/Desktop/assimp" does not appear to contain CMakeLists.txt.
+  Specify --help for usage, or press the help button on the CMake GUI.
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(241,5): error MSB8066: o build personalizado para 'C:\Users\Jonathan  M.B\Desktop\assimp\code\CMakeLists.txt' foi encerrado com o código 1.
