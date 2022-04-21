@@ -39,6 +39,9 @@
     <ClCompile Include="Camera.cpp">
       <Filter>Arquivos de Origem</Filter>
     </ClCompile>
+    <ClCompile Include="ModelTransform.cpp">
+      <Filter>Arquivos de Origem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -59,12 +62,21 @@
     <ClInclude Include="Camera.h">
       <Filter>Arquivos de Cabeçalho</Filter>
     </ClInclude>
+    <ClInclude Include="ModelTransform.h">
+      <Filter>Arquivos de Cabeçalho</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\shaders\hello.fs">
       <Filter>Shaders</Filter>
     </None>
     <None Include="..\shaders\hello.vs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\shaders\selected.fs">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\shaders\selected.vs">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

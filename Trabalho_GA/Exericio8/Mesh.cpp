@@ -30,7 +30,6 @@ void Mesh::Draw(Shader& shader)
         else if (nome == "texture_height")
             numero = std::to_string(heightNr++);
 
-
         glUniform1i(glGetUniformLocation(shader.ID, (nome + numero).c_str()), i);
 
         glBindTexture(GL_TEXTURE_2D, textures[i].id);

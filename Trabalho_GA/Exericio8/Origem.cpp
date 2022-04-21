@@ -8,8 +8,16 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Model.h"
+#include "ModelTransform.h"
 
 #include <iostream>
+
+enum transformationType
+{
+    position = 0,
+    rotation,
+    scale
+};
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -29,6 +37,17 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+//Transform
+ModelTransform modelTransform = ModelTransform();
+int axisSelected = 0;
+transformationType controlSelected = scale;
+bool tabHold = false;
+bool selected = false;
+bool capsHold = false;
+
+string clsAssist;
+
 
 int main()
 {
@@ -77,12 +96,15 @@ int main()
 
     // build and compile shaders
     // -------------------------
-    Shader ourShader("../shaders/hello.vs", "../shaders/hello.fs");
+    
+    Shader defaultShader("../shaders/hello.vs", "../shaders/hello.fs");
+    Shader selectedShader("../shaders/selected.vs", "../shaders/selected.fs");
+
+    Shader ourShader = defaultShader;
 
     // load models
     // -----------
     Model ourModel("../Modelos/3D_Models/Pokemon/Pikachu.obj");
-
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -106,6 +128,11 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        if (selected)
+            ourShader = selectedShader;
+        else
+            ourShader = defaultShader;
+
         // don't forget to enable shader before setting uniforms
         ourShader.use();
 
@@ -117,8 +144,28 @@ int main()
 
         // render the loaded model
         glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+
+#pragma region model_update
+
+
+        model = glm::translate(model, modelTransform.getPosition()); // translate it down so it's at the center of the scene
+        model = glm::scale(model, modelTransform.getVecScale());	// it's a bit too big for our scene, so scale it down
+        
+        
+        model = glm::rotate(model, modelTransform.getAngle(0), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, modelTransform.getAngle(1), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, modelTransform.getAngle(2), glm::vec3(0.0f, 0.0f, 1.0f));
+        
+
+#pragma endregion
+
+        for (int i = 0; i < ourModel.textures_loaded.size(); i++)
+        {
+            
+            
+        }
+
+       
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
@@ -135,6 +182,45 @@ int main()
     return 0;
 }
 
+void print(string str)
+{
+    if (clsAssist != str)
+    {
+        system("CLS");
+        cout << str;
+        clsAssist = str;
+    }
+}
+
+void transformObject(float value)
+{
+    if (!selected)
+    {
+        print("No model selected!\n");
+        return;
+    }
+
+    switch (controlSelected)
+    {
+    case position:
+        modelTransform.addPosition(axisSelected, value * 0.5);
+        break;
+    case rotation:
+        modelTransform.addAngle(axisSelected, value*0.5);
+        break;
+    case scale:
+        modelTransform.addScale(value*0.2);
+        break;
+    }
+}
+
+void resetModel() 
+{
+    modelTransform = ModelTransform();
+}
+
+
+
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 // ---------------------------------------------------------------------------------------------------------
 void processInput(GLFWwindow* window)
@@ -150,6 +236,74 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE)
+    {
+        if (tabHold)
+        {
+            if (controlSelected == position)
+            {
+                controlSelected = rotation;
+                print("Rotation selected\n");
+            }
+            else if (controlSelected == rotation)
+            {
+                controlSelected = scale;
+                print("Scale selected\n");
+            }
+            else if (controlSelected == scale)
+            {
+                controlSelected = position;
+                print("Position selected\n");
+            }
+            tabHold = false;
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS)
+    {
+        tabHold = true;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_CAPS_LOCK) == GLFW_RELEASE)
+    {
+        if (capsHold)
+        {
+            selected = !selected;
+            capsHold = false;
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_CAPS_LOCK) == GLFW_PRESS)
+    {
+        capsHold = true;
+    }
+
+    
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+    {
+        axisSelected = 0;
+        print("X axis selected\n");
+    }
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+    {
+        axisSelected = 1;
+        print("Y axis selected\n");
+    }
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+    {
+        axisSelected = 2;
+        print("Z axis selected\n");
+    }
+
+    
+    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+        transformObject(0.1); //ang++
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+        transformObject(-0.1); //ang--
+      
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS)
+        resetModel();
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
