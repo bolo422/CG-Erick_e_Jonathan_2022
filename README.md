@@ -13,6 +13,7 @@ Autores: Erick Hasse ([bolo422](https://github.com/bolo422)) e Jonathan Belmiro 
 **Controles do modelo**
 
 - Alternar: Transação / Rotação / Escala -> **TAB**
+- Resetar Transform -> **R**
 - Alternar Eixo:
   - X -> **1**
   - Y -> **2**

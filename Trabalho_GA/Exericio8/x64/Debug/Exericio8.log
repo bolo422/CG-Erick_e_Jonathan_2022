@@ -1,9 +1,9 @@
 ﻿  Origem.cpp
-D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(206,56): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(209,52): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(212,38): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
-D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(301,28): warning C4305: 'argumento': truncamento de 'double' para 'float'
-D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(303,29): warning C4305: 'argumento': truncamento de 'double' para 'float'
+D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(209,56): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(212,52): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(215,38): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(304,28): warning C4305: 'argumento': truncamento de 'double' para 'float'
+D:\GitHub\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(306,29): warning C4305: 'argumento': truncamento de 'double' para 'float'
 LINK : warning LNK4075: ignorando '/INCREMENTAL' devido a especificação '/FORCE'
 Origem.obj : warning LNK4006: "unsigned int __cdecl TextureFromFile(char const *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool)" (?TextureFromFile@@YAIPEBDAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_N@Z) já definido no GameManager.obj; segunda definição ignorada
 Origem.obj : warning LNK4006: "float lastX" (?lastX@@3MA) já definido no GameManager.obj; segunda definição ignorada

@@ -105,6 +105,9 @@ int main()
     // load models
     // -----------
     Model ourModel("../Modelos/3D_Models/Pokemon/Pikachu.obj");
+    //Model ourModel("../Modelos/3D_Models/Car/Pony_cartoon.obj");
+    //Model ourModel("../Modelos/3D_Models/Dispenser/source/cat toy.obj");
+
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -147,28 +150,16 @@ int main()
 
 #pragma region model_update
 
-
         model = glm::translate(model, modelTransform.getPosition()); // translate it down so it's at the center of the scene
         model = glm::scale(model, modelTransform.getVecScale());	// it's a bit too big for our scene, so scale it down
-        
-        
         model = glm::rotate(model, modelTransform.getAngle(0), glm::vec3(1.0f, 0.0f, 0.0f));
         model = glm::rotate(model, modelTransform.getAngle(1), glm::vec3(0.0f, 1.0f, 0.0f));
         model = glm::rotate(model, modelTransform.getAngle(2), glm::vec3(0.0f, 0.0f, 1.0f));
-        
 
 #pragma endregion
 
-        for (int i = 0; i < ourModel.textures_loaded.size(); i++)
-        {
-            
-            
-        }
-
-       
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
-
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
