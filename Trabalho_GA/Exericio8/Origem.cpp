@@ -39,7 +39,7 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 //Transform
-ModelTransform modelTransform = ModelTransform();
+//ModelTransform* modelTransform;
 int axisSelected = 0;
 transformationType controlSelected = scale;
 bool tabHold = false;
@@ -47,6 +47,8 @@ bool selected = false;
 bool capsHold = false;
 
 string clsAssist;
+
+Model* selectedModel;
 
 
 int main()
@@ -105,9 +107,18 @@ int main()
     // load models
     // -----------
     Model ourModel("../Modelos/3D_Models/Pokemon/Pikachu.obj");
-    //Model ourModel("../Modelos/3D_Models/Car/Pony_cartoon.obj");
-    //Model ourModel("../Modelos/3D_Models/Dispenser/source/cat toy.obj");
+    ourModel.transform.setPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
+    Model ourModel2("../Modelos/3D_Models/Pokemon/PikachuF.obj");
+    ourModel2.transform.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
+    //Model ourModel3("../Modelos/3D_Models/Dispenser/source/cat toy.obj");
+    //ourModel3.setPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    vector < Model > models;
+    models.push_back(ourModel);
+    models.push_back(ourModel2);
+    //.push_back(ourModel3);
 
+    selectedModel =& models[1];
+    //*modelTransform = selectedModel->transform;
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -131,6 +142,19 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        ourShader.setVec3("light.position", camera.Position);
+        ourShader.setVec3("light.direction", camera.Front);
+        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        ourShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+        ourShader.setVec3("viewPos", camera.Position);
+        ourShader.setVec3("light.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
+        ourShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setFloat("light.constant", 1.0f);
+        ourShader.setFloat("light.linear", 0.09f);
+        ourShader.setFloat("light.quadratic", 0.032f);
+        ourShader.setFloat("material.shininess", 50.0f); // 32.0f
+
         if (selected)
             ourShader = selectedShader;
         else
@@ -149,17 +173,30 @@ int main()
         glm::mat4 model = glm::mat4(1.0f);
 
 #pragma region model_update
+       /* glm::mat4 teste = glm::mat4(models[1])*/
 
-        model = glm::translate(model, modelTransform.getPosition()); // translate it down so it's at the center of the scene
-        model = glm::scale(model, modelTransform.getVecScale());	// it's a bit too big for our scene, so scale it down
-        model = glm::rotate(model, modelTransform.getAngle(0), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, modelTransform.getAngle(1), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, modelTransform.getAngle(2), glm::vec3(0.0f, 0.0f, 1.0f));
+        
+        
+
+        //selectedModel->setPosition(modelTransform->getPosition());
+        //selectedModel->setScale(modelTransform->getVecScale());
+
+
+        //models[1] = glm::translate(models[1], modelTransform.getPosition()); // translate it down so it's at the center of the scene
+        //models[1].model = glm::scale(models[1].model, modelTransform.getVecScale());	// it's a bit too big for our scene, so scale it down
+        //models[1].model = glm::rotate(models[1].model, modelTransform.getAngle(0), glm::vec3(1.0f, 0.0f, 0.0f));
+        //models[1].model = glm::rotate(models[1].model, modelTransform.getAngle(1), glm::vec3(0.0f, 1.0f, 0.0f));
+        //models[1].model = glm::rotate(models[1].model, modelTransform.getAngle(2), glm::vec3(0.0f, 0.0f, 1.0f));
 
 #pragma endregion
 
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+       /* ourShader.setMat4("model", model);
+        ourModel.Draw(ourShader);*/
+        for (int i = 0; i < models.size(); i++)
+        {
+            models[i].update(ourShader);
+            models[i].Draw(ourShader);
+        }
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -185,6 +222,8 @@ void print(string str)
 
 void transformObject(float value)
 {
+    if (selectedModel == NULL) return;
+
     if (!selected)
     {
         print("No model selected!\n");
@@ -194,20 +233,24 @@ void transformObject(float value)
     switch (controlSelected)
     {
     case position:
-        modelTransform.addPosition(axisSelected, value * 0.5);
+        selectedModel->transform.addPosition(axisSelected, value * 0.5f);
+        //modelTransform->addPosition(axisSelected, value * 0.5);
+
         break;
     case rotation:
-        modelTransform.addAngle(axisSelected, value*0.5);
+        selectedModel->transform.addAngle(axisSelected, value * 0.5);
+        //modelTransform->addAngle(axisSelected, value*0.5);
         break;
     case scale:
-        modelTransform.addScale(value*0.2);
+        selectedModel->transform.addScale(value * 0.2);
+        //modelTransform->addScale(value*0.2);
         break;
     }
 }
 
 void resetModel() 
 {
-    modelTransform = ModelTransform();
+    selectedModel->transform = ModelTransform();
 }
 
 

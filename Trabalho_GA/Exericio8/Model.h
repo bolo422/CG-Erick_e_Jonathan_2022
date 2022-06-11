@@ -10,6 +10,7 @@
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
+#include "ModelTransform.h"
 
 #include "Mesh.h"
 #include "Shader.h"
@@ -32,18 +33,40 @@ public:
     vector<Mesh>    meshes;
     string directory;
     bool gammaCorrection;
+    //glm::vec3 position;
+    //glm::vec3 scale;
+    glm::mat4 model;
+
+    ModelTransform transform;
 
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
+        transform = ModelTransform();
+        //scale = glm::vec3(1, 1, 1);
         loadModel(path);
     }
+
+    Model() {}
+
     // draws the model, and thus all its meshes
     void Draw(Shader& shader)
     {
         for (unsigned int i = 0; i < meshes.size(); i++)
             meshes[i].Draw(shader);
     }
+
+    void update(Shader& shader)
+    {
+        model = glm::mat4(1);
+        model = glm::translate(model, transform.getPosition());
+        model = glm::scale(model, transform.getVecScale());
+        model = glm::rotate(model, transform.getAngle(0), glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, transform.getAngle(1), glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, transform.getAngle(2), glm::vec3(0.0f, 0.0f, 1.0f));
+        shader.setMat4("model", model);
+    }
+
 
 private:
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.

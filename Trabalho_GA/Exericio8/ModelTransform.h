@@ -57,6 +57,11 @@ public:
 		scale = _scale;
 	}
 
+	void setScale(glm::vec3 _scale)
+	{
+		scale = _scale.x;
+	}
+
 	glm::vec3 getPosition()
 	{
 		return position;
