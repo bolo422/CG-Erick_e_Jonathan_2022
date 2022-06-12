@@ -36,12 +36,14 @@ public:
     //glm::vec3 position;
     //glm::vec3 scale;
     glm::mat4 model;
+    bool isSelected;
 
     ModelTransform transform;
 
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
+        isSelected = false;
         transform = ModelTransform();
         //scale = glm::vec3(1, 1, 1);
         loadModel(path);
@@ -67,8 +69,10 @@ public:
         shader.setMat4("model", model);
     }
 
-
 private:
+
+    
+
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
     void loadModel(string const& path)
     {

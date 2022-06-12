@@ -12,6 +12,8 @@
 
 #include <iostream>
 
+#include <fstream>
+
 enum transformationType
 {
     position = 0,
@@ -30,6 +32,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -43,12 +46,18 @@ float lastFrame = 0.0f;
 int axisSelected = 0;
 transformationType controlSelected = scale;
 bool tabHold = false;
-bool selected = false;
+//bool selected = false;
 bool capsHold = false;
+
+int testSelectedModel = 0;
 
 string clsAssist;
 
-Model* selectedModel;
+//Model* selectedModel;
+
+vector < Model > models;
+
+int selectedModel;
 
 
 int main()
@@ -106,18 +115,63 @@ int main()
 
     // load models
     // -----------
-    Model ourModel("../Modelos/3D_Models/Pokemon/Pikachu.obj");
-    ourModel.transform.setPosition(glm::vec3(-2.0f, 0.0f, 0.0f));
-    Model ourModel2("../Modelos/3D_Models/Pokemon/PikachuF.obj");
-    ourModel2.transform.setPosition(glm::vec3(0.0f, 0.0f, 0.0f));
-    //Model ourModel3("../Modelos/3D_Models/Dispenser/source/cat toy.obj");
-    //ourModel3.setPosition(glm::vec3(2.0f, 0.0f, 0.0f));
-    vector < Model > models;
-    models.push_back(ourModel);
-    models.push_back(ourModel2);
+    //Model ourModel("../Modelos/3D_Models/Pokemon/Pikachu.obj");
+    //ourModel.transform.setPosition(glm::vec3(-4.0f, 0.0f, 0.0f));
+    //Model ourModel2("../Modelos/3D_Models/Pokemon/PikachuF.obj");
+    //ourModel2.transform.setPosition(glm::vec3(4.0f, 0.0f, 0.0f));
+    //ourModel2.transform.setScale(0.1f);
+    ////Model ourModel3("../Modelos/3D_Models/Dispenser/source/cat toy.obj");
+    ////ourModel3.setPosition(glm::vec3(2.0f, 0.0f, 0.0f));
+    //models.push_back(ourModel);
+    //models.push_back(ourModel2);
+
+    ifstream file("../Modelos/scene.txt");
+    string fInput;
+
+    for (int i = 0; i < 16; i++) // TUTORIAL
+    {
+        getline(file, fInput);
+    }
+
+    file >> fInput;
+
+    float cam_x, cam_y, cam_z;
+    file >> cam_x;
+    file >> cam_y;
+    file >> cam_z;
+    camera.position = glm::vec3(cam_x, cam_y, cam_z);
+    
+    file >> fInput;
+    file >> fInput;
+    string defaultPath;
+    file >> defaultPath;
+
+    while (file >> fInput)
+    {
+        float x, y, z;
+
+        fInput = defaultPath + fInput;
+        models.push_back(Model(fInput));
+        
+        file >> x;
+        file >> y;
+        file >> z;
+        models[models.size() - 1].transform.setPosition(glm::vec3(x, y, z));
+        file >> x;
+        file >> y;
+        file >> z;
+        models[models.size() - 1].transform.setRotation(glm::vec3(x, y, z));
+        file >> x;
+        models[models.size() - 1].transform.setScale(x);
+        
+    }
+    file.close();
+
+    selectedModel = models.size();
+
     //.push_back(ourModel3);
 
-    selectedModel =& models[1];
+    //selectedModel =& models[1];
     //*modelTransform = selectedModel->transform;
 
     // draw in wireframe
@@ -142,29 +196,46 @@ int main()
         glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        ourShader.setVec3("light.position", camera.Position);
+        //playerLantern(&ourShader);
+        //sun(&ourShader);
+
+        ourShader.setVec3("light.position", camera.position);
         ourShader.setVec3("light.direction", camera.Front);
-        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(42.5f)));
         ourShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
-        ourShader.setVec3("viewPos", camera.Position);
+        ourShader.setVec3("viewPos", camera.position);
         ourShader.setVec3("light.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
-        ourShader.setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
-        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("light.diffuse", 5.0f, 5.0f, 5.0f);
+        ourShader.setVec3("light.specular", 5.0f, 5.0f, 5.0f);
         ourShader.setFloat("light.constant", 1.0f);
-        ourShader.setFloat("light.linear", 0.09f);
+        ourShader.setFloat("light.linear", 1.09f);
         ourShader.setFloat("light.quadratic", 0.032f);
         ourShader.setFloat("material.shininess", 50.0f); // 32.0f
 
-        if (selected)
+        ourShader.setVec3("sun.position", glm::vec3(0, 10, 0));
+        ourShader.setVec3("sun.direction", glm::vec3(0, -90, 0));
+        ourShader.setFloat("sun.cutOff", glm::cos(glm::radians(120.5f)));
+        ourShader.setFloat("sun.outerCutOff", glm::cos(glm::radians(170.5f)));
+        ourShader.setVec3("sun.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
+        ourShader.setVec3("sun.diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("sun.specular", 1.0f, 1.0f, 1.0f);
+        ourShader.setFloat("sun.constant", 1.0f);
+        ourShader.setFloat("sun.linear", 0.09f);
+        ourShader.setFloat("sun.quadratic", 0.032f);
+
+        //selectedShader.setBool("selected", true);
+
+        /*if (selected)
             ourShader = selectedShader;
         else
-            ourShader = defaultShader;
+            ourShader = defaultShader;*/
+
 
         // don't forget to enable shader before setting uniforms
         ourShader.use();
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 1000.0f);
         glm::mat4 view = camera.GetViewMatrix();
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
@@ -190,13 +261,34 @@ int main()
 
 #pragma endregion
 
+
+        
+
+
        /* ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);*/
-        for (int i = 0; i < models.size(); i++)
+
+        for (Model model : models)
         {
-            models[i].update(ourShader);
-            models[i].Draw(ourShader);
+            if(model.isSelected)
+                ourShader.setBool("selected", true);
+            else
+                ourShader.setBool("selected", false);
+
+            model.update(ourShader);
+            model.Draw(ourShader);
         }
+
+        //for (int i = 0; i < models.size(); i++)
+        //{
+        //    if(models[i].getSelected())
+        //        ourShader.setBool("selected", true);
+        //    else
+        //        ourShader.setBool("selected", false);
+
+        //    models[i].update(ourShader);
+        //    models[i].Draw(ourShader);
+        //}
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
         // -------------------------------------------------------------------------------
@@ -208,6 +300,36 @@ int main()
     // ------------------------------------------------------------------
     glfwTerminate();
     return 0;
+}
+
+void playerLantern(Shader* ourShader)
+{
+    ourShader->setVec3("light.position", camera.position);
+    ourShader->setVec3("light.direction", camera.Front);
+    ourShader->setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
+    ourShader->setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
+    ourShader->setVec3("viewPos", camera.position);
+    ourShader->setVec3("light.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
+    ourShader->setVec3("light.diffuse", 1.0f, 1.0f, 1.0f);
+    ourShader->setVec3("light.specular", 1.0f, 1.0f, 1.0f);
+    ourShader->setFloat("light.constant", 1.0f);
+    ourShader->setFloat("light.linear", 0.09f);
+    ourShader->setFloat("light.quadratic", 0.032f);
+    ourShader->setFloat("material.shininess", 50.0f); // 32.0f
+}            
+
+void sun(Shader* ourShader)
+{
+    ourShader->setVec3("sun.position", glm::vec3(0,10,0));
+    ourShader->setVec3("sun.direction", glm::vec3(0,-90,0));
+    ourShader->setFloat("sun.cutOff", glm::cos(glm::radians(120.5f)));
+    ourShader->setFloat("sun.outerCutOff", glm::cos(glm::radians(170.5f)));
+    ourShader->setVec3("sun.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
+    ourShader->setVec3("sun.diffuse", 1.0f, 1.0f, 1.0f);
+    ourShader->setVec3("sun.specular", 1.0f, 1.0f, 1.0f);
+    ourShader->setFloat("sun.constant", 1.0f);
+    ourShader->setFloat("sun.linear", 0.09f);
+    ourShader->setFloat("sun.quadratic", 0.032f);
 }
 
 void print(string str)
@@ -222,35 +344,25 @@ void print(string str)
 
 void transformObject(float value)
 {
-    if (selectedModel == NULL) return;
-
-    if (!selected)
-    {
-        print("No model selected!\n");
-        return;
-    }
+    if (selectedModel >= models.size()) return;
 
     switch (controlSelected)
     {
     case position:
-        selectedModel->transform.addPosition(axisSelected, value * 0.5f);
-        //modelTransform->addPosition(axisSelected, value * 0.5);
-
+        models[selectedModel].transform.addPosition(axisSelected, value * 0.5f);
         break;
     case rotation:
-        selectedModel->transform.addAngle(axisSelected, value * 0.5);
-        //modelTransform->addAngle(axisSelected, value*0.5);
+        models[selectedModel].transform.addAngle(axisSelected, value * 0.5);
         break;
     case scale:
-        selectedModel->transform.addScale(value * 0.2);
-        //modelTransform->addScale(value*0.2);
+        models[selectedModel].transform.addScale(value * 0.2);
         break;
     }
 }
 
 void resetModel() 
 {
-    selectedModel->transform = ModelTransform();
+    models[selectedModel].transform = ModelTransform();
 }
 
 
@@ -303,8 +415,26 @@ void processInput(GLFWwindow* window)
     {
         if (capsHold)
         {
-            selected = !selected;
+            //selected = !selected;
             capsHold = false;
+
+
+            if (selectedModel >= models.size()) // entao nenhum modelo é o selecionado
+            {
+                models[0].isSelected = true;
+                selectedModel = 0;
+            }
+            else if(selectedModel == models.size()-1)
+            {
+                models[selectedModel].isSelected = false;
+                selectedModel++;
+            }
+            else
+            {
+                models[selectedModel].isSelected = false;
+                selectedModel++;
+                models[selectedModel].isSelected = true;
+            }
         }
     }
 

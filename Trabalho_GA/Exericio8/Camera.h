@@ -18,7 +18,7 @@ enum Camera_Movement {
 // Default camera values
 const float YAW = -90.0f;
 const float PITCH = 0.0f;
-const float SPEED = 2.5f;
+const float SPEED = 100.0f;
 const float SENSITIVITY = 0.1f;
 const float ZOOM = 45.0f;
 
@@ -28,7 +28,7 @@ class Camera
 {
 public:
     // camera Attributes
-    glm::vec3 Position;
+    glm::vec3 position;
     glm::vec3 Front;
     glm::vec3 Up;
     glm::vec3 Right;
@@ -44,7 +44,7 @@ public:
     // constructor with vectors
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = YAW, float pitch = PITCH) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
-        Position = position;
+        this->position = position;
         WorldUp = up;
         Yaw = yaw;
         Pitch = pitch;
@@ -53,7 +53,7 @@ public:
     // constructor with scalar values
     Camera(float posX, float posY, float posZ, float upX, float upY, float upZ, float yaw, float pitch) : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
     {
-        Position = glm::vec3(posX, posY, posZ);
+        position = glm::vec3(posX, posY, posZ);
         WorldUp = glm::vec3(upX, upY, upZ);
         Yaw = yaw;
         Pitch = pitch;
@@ -63,7 +63,7 @@ public:
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix()
     {
-        return glm::lookAt(Position, Position + Front, Up);
+        return glm::lookAt(position, position + Front, Up);
     }
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -71,13 +71,13 @@ public:
     {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD)
-            Position += Front * velocity;
+            position += Front * velocity;
         if (direction == BACKWARD)
-            Position -= Front * velocity;
+            position -= Front * velocity;
         if (direction == LEFT)
-            Position -= Right * velocity;
+            position -= Right * velocity;
         if (direction == RIGHT)
-            Position += Right * velocity;
+            position += Right * velocity;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.

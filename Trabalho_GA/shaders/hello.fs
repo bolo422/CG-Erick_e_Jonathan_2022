@@ -28,7 +28,11 @@ in vec2 TexCoords;
   
 uniform vec3 viewPos;
 uniform Material material;
+
 uniform Light light;
+uniform Light sun;
+
+uniform bool selected;
 
 void main()
 {    
@@ -62,5 +66,50 @@ void main()
     specular *= attenuation;   
         
     vec3 result = ambient + diffuse + specular;
-    FragColor = vec4(result, 1.0);
+    
+    /////////////////////////////
+
+    // ambient
+    ambient = sun.ambient * texture(material.diffuse, TexCoords).rgb;
+    
+    // diffuse 
+    norm = normalize(Normal);
+    lightDir = normalize(sun.position - FragPos);
+    diff = max(dot(norm, lightDir), 0.0);
+    diffuse = sun.diffuse * diff * texture(material.diffuse, TexCoords).rgb;  
+    
+    // specular
+    viewDir = normalize(viewPos - FragPos);
+    reflectDir = reflect(-lightDir, norm);  
+    spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    specular = sun.specular * spec * texture(material.specular, TexCoords).rgb;  
+    
+    // spotlight (soft edges)
+    theta = dot(lightDir, normalize(-sun.direction)); 
+    epsilon = (sun.cutOff - sun.outerCutOff);
+    intensity = clamp((theta - sun.outerCutOff) / epsilon, 0.0, 1.0);
+    diffuse  *= intensity;
+    specular *= intensity;
+    
+    // attenuation
+    distance    = length(sun.position - FragPos);
+    attenuation = 1.0 / (sun.constant + sun.linear * distance + sun.quadratic * (distance * distance));    
+    ambient  *= attenuation; 
+    diffuse   *= attenuation;
+    specular *= attenuation;   
+        
+    vec3 result2 = ambient + diffuse + specular;
+
+
+
+    ////////////////////////
+    if(selected)
+    {
+        FragColor = vec4(result + result2, 1.0) * vec4(0.5,1.0,1.0, 1.0);
+    }
+    else
+    {
+        FragColor = vec4(result + result2, 1.0);
+    }
+    
 }

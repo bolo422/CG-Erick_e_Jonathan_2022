@@ -1,0 +1,22 @@
+--- NÃO REMOVA NENHUMA DAS LINHAS DESTE TUTORIAL, ele deve sempre ter 16 linhas ---
+Após O Tutorial a primeira linha deste arquivo ele é destinado a posicao da camera(3 floats)
+E a segunda linha é destinada ao caminho padrão, ou seja, o início do caminho que é comum a todos os seus arquivos, o padrão é ../Modelos/, independnete do seu caminho é provável que queria deixar ../ no início
+Não Deixe linhas em branco
+O caminho para o modelo deve estar dentro da pasta /Modelos/
+
+Coloque (separando por espacos ou linhas) as seguintes informacoes (Nesta ordem):
+
+caminho Para O Modelo
+posicao(3 floats)
+rotacao(3 floats)
+escala(1 float)
+
+Em caso de duvidas acesse nosso repositorio para ver o exemplo que está la!
+https://github.com/bolo422/CG-Erick_e_Jonathan_2022
+-------------------------------------------------------------------------fim do tutorial
+camera: 0 5 8
+caminho padrão: ../Modelos/3D_Models/
+island/source/island.obj
+0 -100 0
+0 0 0
+1
