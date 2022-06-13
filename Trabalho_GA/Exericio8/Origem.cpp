@@ -201,23 +201,23 @@ int main()
 
         ourShader.setVec3("light.position", camera.position);
         ourShader.setVec3("light.direction", camera.Front);
-        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(42.5f)));
+        ourShader.setFloat("light.cutOff", glm::cos(glm::radians(12.5f)));
         ourShader.setFloat("light.outerCutOff", glm::cos(glm::radians(17.5f)));
         ourShader.setVec3("viewPos", camera.position);
-        ourShader.setVec3("light.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
-        ourShader.setVec3("light.diffuse", 5.0f, 5.0f, 5.0f);
-        ourShader.setVec3("light.specular", 5.0f, 5.0f, 5.0f);
+        ourShader.setVec3("light.ambient", 10.0f, 10.0f, 10.0f); // 0.1f, 0.1f, 0.1f
+        ourShader.setVec3("light.diffuse", 10.0f, 10.0f, 10.0f);
+        ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("light.constant", 1.0f);
-        ourShader.setFloat("light.linear", 1.09f);
+        ourShader.setFloat("light.linear", 0.09f);
         ourShader.setFloat("light.quadratic", 0.032f);
-        ourShader.setFloat("material.shininess", 50.0f); // 32.0f
+        ourShader.setFloat("material.shininess", 10.0f); // 32.0f
 
         ourShader.setVec3("sun.position", glm::vec3(0, 10, 0));
         ourShader.setVec3("sun.direction", glm::vec3(0, -90, 0));
         ourShader.setFloat("sun.cutOff", glm::cos(glm::radians(120.5f)));
         ourShader.setFloat("sun.outerCutOff", glm::cos(glm::radians(170.5f)));
-        ourShader.setVec3("sun.ambient", 3.0f, 3.0f, 3.0f); // 0.1f, 0.1f, 0.1f
-        ourShader.setVec3("sun.diffuse", 1.0f, 1.0f, 1.0f);
+        ourShader.setVec3("sun.ambient", 30.0f, 30.0f, 30.0f); // 0.1f, 0.1f, 0.1f
+        ourShader.setVec3("sun.diffuse", 100.0f, 100.0f, 100.0f);
         ourShader.setVec3("sun.specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("sun.constant", 1.0f);
         ourShader.setFloat("sun.linear", 0.09f);
