@@ -149,6 +149,7 @@ int main()
     while (file >> fInput)
     {
         float x, y, z;
+        float xr, yr, zr;
 
         fInput = defaultPath + fInput;
         models.push_back(Model(fInput));
@@ -157,9 +158,9 @@ int main()
         file >> y;
         file >> z;
         models[models.size() - 1].transform.setPosition(glm::vec3(x, y, z));
-        file >> x;
-        file >> y;
-        file >> z;
+        file >> xr;
+        file >> yr;
+        file >> zr;
         models[models.size() - 1].transform.setRotation(glm::vec3(x, y, z));
         file >> x;
         models[models.size() - 1].transform.setScale(x);
