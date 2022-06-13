@@ -63,9 +63,9 @@ public:
         model = glm::mat4(1);
         model = glm::translate(model, transform.getPosition());
         model = glm::scale(model, transform.getVecScale());
-        model = glm::rotate(model, transform.getAngle(0), glm::vec3(1.0f, 0.0f, 0.0f));
-        model = glm::rotate(model, transform.getAngle(1), glm::vec3(0.0f, 1.0f, 0.0f));
-        model = glm::rotate(model, transform.getAngle(2), glm::vec3(0.0f, 0.0f, 1.0f));
+        model = glm::rotate(model, transform.getRotation().x, glm::vec3(1.0f, 0.0f, 0.0f));
+        model = glm::rotate(model, transform.getRotation().y, glm::vec3(0.0f, 1.0f, 0.0f));
+        model = glm::rotate(model, transform.getRotation().z, glm::vec3(0.0f, 0.0f, 1.0f));
         shader.setMat4("model", model);
     }
 

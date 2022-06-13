@@ -1,5 +1,7 @@
 #include <glm/glm.hpp>
+#include <iostream>
 
+using namespace std;
 #pragma once
 class ModelTransform
 {
@@ -12,7 +14,7 @@ private:
 	float scale;
 	
 
-	float angle[3];
+	//float angle[3];
 
 #pragma endregion
 
@@ -27,7 +29,7 @@ public:
 		position = glm::vec3(0, 0, 0);
 		rotation = glm::vec3(0, 0, 0);
 		scale = 1.0f;
-		angle[0] = 0.0f; angle[1] = 0.0f; angle[2] = 0.0f;
+		//angle[0] = 0.0f; angle[1] = 0.0f; angle[2] = 0.0f;
 	}
 	ModelTransform(glm::vec3 _position, glm::vec3 _rotation, float _scale)
 	{
@@ -82,22 +84,40 @@ public:
 		return glm::vec3(scale, scale, scale);
 	}
 
-	float getAngle(int index)
+
+	string print()
 	{
-		return angle[index];
+		string str = "Position (" + (int)position.x + ',' + (int)position.y + ',' + (int)position.z + ')';
+		str += "\n";
+		str += "Rotation (" + (int)rotation.x + ',' + (int)rotation.y + ',' + (int)rotation.z + ')';
+		str += "\n";
+		str += "Scale (" + (int)scale + ')';
+		return str;
 	}
 
-	glm::vec3 getVecAngle()
-	{
-		return glm::vec3(angle[0], angle[1], angle[2]);
-	}
+	//float getAngle(int index)
+	//{
+	//	return angle[index];
+	//}
+
+	//glm::vec3 getVecAngle()
+	//{
+	//	return glm::vec3(angle[0], angle[1], angle[2]);
+	//}
 
 #pragma endregion
 
 	//0 = X, 1 = Y, 2 = Z
 	void addAngle(int index, float value)
 	{
-		angle[index] += value;
+		switch (index)
+		{
+			case 0: rotation.x += value; break;
+			case 1: rotation.y += value; break;
+			case 2: rotation.z += value; break;
+			default: break;
+
+		}
 	}
 
 	void addScale(float value)
@@ -115,5 +135,7 @@ public:
 	{
 		position[index] += value;
 	}
+
+
 };
 

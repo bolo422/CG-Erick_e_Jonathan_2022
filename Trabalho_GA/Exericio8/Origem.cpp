@@ -149,7 +149,6 @@ int main()
     while (file >> fInput)
     {
         float x, y, z;
-        float xr, yr, zr;
 
         fInput = defaultPath + fInput;
         models.push_back(Model(fInput));
@@ -158,9 +157,9 @@ int main()
         file >> y;
         file >> z;
         models[models.size() - 1].transform.setPosition(glm::vec3(x, y, z));
-        file >> xr;
-        file >> yr;
-        file >> zr;
+        file >> x;
+        file >> y;
+        file >> z;
         models[models.size() - 1].transform.setRotation(glm::vec3(x, y, z));
         file >> x;
         models[models.size() - 1].transform.setScale(x);
@@ -351,12 +350,15 @@ void transformObject(float value)
     {
     case position:
         models[selectedModel].transform.addPosition(axisSelected, value * 0.5f);
+        //print(models[selectedModel].transform.print());
         break;
     case rotation:
         models[selectedModel].transform.addAngle(axisSelected, value * 0.5);
+        //print(models[selectedModel].transform.print());
         break;
     case scale:
         models[selectedModel].transform.addScale(value * 0.2);
+        //print(models[selectedModel].transform.print());
         break;
     }
 }
