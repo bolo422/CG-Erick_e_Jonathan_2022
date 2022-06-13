@@ -25,10 +25,22 @@ Pokemon/PikachuF.obj
 0 0 0
 0.25
 Pokemon/Pikachu.obj
--20 -70 -10
-10 10 10
+-23 -68 -4
+0 1.5 0
 2
 mew/source/mew.obj
-0 -70 0
+-30 -70 30
+0 2 0
+0.25
+pokemon-miniq/source/miniQ.obj
+30 -102 15
+0 -1.5 0
+5
+campfire/source/Campfire.obj
+5 -97 12
 0 0 0
-2
+20
+psyduck-kfc-toy/source/psyduck-anim.obj
+25 -101 -23
+0 0 0
+0.5
