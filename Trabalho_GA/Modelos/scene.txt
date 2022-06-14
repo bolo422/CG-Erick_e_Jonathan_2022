@@ -44,3 +44,19 @@ psyduck-kfc-toy/source/psyduck-anim.obj
 25 -101 -23
 0 0 0
 0.5
+gastly/source/Ghosout.obj
+-15 -65 -10
+0 5.5 0
+1
+misdreavus/source/Misdreavus/Normal/untitled.obj
+-10 -70 40
+0 2 0
+0.25
+umbreon/source/finalMesh.obj
+0 -98 55
+0 3.5 0
+10
+Ash/Ash.obj
+45 -102 -5
+0 -1.8 0
+2

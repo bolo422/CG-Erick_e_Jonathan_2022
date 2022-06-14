@@ -212,12 +212,12 @@ int main()
         ourShader.setFloat("light.quadratic", 0.032f);
         ourShader.setFloat("material.shininess", 10.0f); // 32.0f
 
-        ourShader.setVec3("sun.position", glm::vec3(0, 10, 0));
+        ourShader.setVec3("sun.position", glm::vec3(0, 50, 0));
         ourShader.setVec3("sun.direction", glm::vec3(0, -90, 0));
         ourShader.setFloat("sun.cutOff", glm::cos(glm::radians(120.5f)));
         ourShader.setFloat("sun.outerCutOff", glm::cos(glm::radians(170.5f)));
-        ourShader.setVec3("sun.ambient", 30.0f, 30.0f, 30.0f); // 0.1f, 0.1f, 0.1f
-        ourShader.setVec3("sun.diffuse", 100.0f, 100.0f, 100.0f);
+        ourShader.setVec3("sun.ambient", 300.0f, 300.0f, 300.0f); // 0.1f, 0.1f, 0.1f
+        ourShader.setVec3("sun.diffuse", 10.0f, 10.0f, 10.0f);
         ourShader.setVec3("sun.specular", 1.0f, 1.0f, 1.0f);
         ourShader.setFloat("sun.constant", 1.0f);
         ourShader.setFloat("sun.linear", 0.09f);

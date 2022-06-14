@@ -1,1 +1,14 @@
-﻿  Exericio8.vcxproj -> C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\x64\Debug\Hello3D.exe
+﻿  Origem.cpp
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(170,34): warning C4267: '=': conversão de 'size_t' para 'int', possível perda de dados
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(356,70): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(360,56): warning C4244: 'argumento': conversão de 'double' para 'float', possível perda de dados
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(468,28): warning C4305: 'argumento': truncamento de 'double' para 'float'
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\Exericio8\Origem.cpp(470,29): warning C4305: 'argumento': truncamento de 'double' para 'float'
+LINK : warning LNK4075: ignorando '/INCREMENTAL' devido a especificação '/FORCE'
+Origem.obj : warning LNK4006: "unsigned int __cdecl TextureFromFile(char const *,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const &,bool)" (?TextureFromFile@@YAIPEBDAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_N@Z) já definido no GameManager.obj; segunda definição ignorada
+Origem.obj : warning LNK4006: "float lastX" (?lastX@@3MA) já definido no GameManager.obj; segunda definição ignorada
+Origem.obj : warning LNK4006: "float lastY" (?lastY@@3MA) já definido no GameManager.obj; segunda definição ignorada
+Origem.obj : warning LNK4006: "bool firstMouse" (?firstMouse@@3_NA) já definido no GameManager.obj; segunda definição ignorada
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflita com uso de outras bibliotecas; use /NODEFAULTLIB:library
+C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\x64\Debug\Hello3D.exe : warning LNK4088: imagem sendo gerada devido a opção /FORCE; imagem não pode ser executada
+  Exericio8.vcxproj -> C:\Users\Jonathan  M.B\Desktop\CG-Erick_e_Jonathan_2022\Trabalho_GA\x64\Debug\Hello3D.exe
