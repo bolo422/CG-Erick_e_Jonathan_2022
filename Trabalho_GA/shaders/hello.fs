@@ -100,9 +100,8 @@ void main()
         
     vec3 result2 = ambient + diffuse + specular;
 
-
-
     ////////////////////////
+
     if(selected)
     {
         FragColor = vec4(result + result2, 1.0) * vec4(0.5,1.0,1.0, 1.0);
